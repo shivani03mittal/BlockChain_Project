@@ -131,7 +131,7 @@ return (
         ) : (
           <Routes>
             <Route path="/" element={
-              <Home marketplace={marketplaceContract} nft={nftTokenContract} />
+              <Home marketplace={marketplaceContract} nft={nftTokenContract}  account={account}/>
             } />
             <Route path="/create" element={
               <Create marketplace={marketplaceContract} nft={nftTokenContract} />

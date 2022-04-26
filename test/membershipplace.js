@@ -130,6 +130,8 @@ describe('minting', async () => {
     
     market = await Market.deployed(toeknadd);
     maddress= market.address;
+
+    await token.setMarketplace(market.address)
     
       await token.mint('#EC058E',{ from: minter });
     });
@@ -159,8 +161,9 @@ describe('minting', async () => {
           price
       });
 
-      const owner = await token.ownerOf(tokenId);
-      assert.equal(owner, market.address, "Market contract is not the new owner.");
+      const apr= await token.getApproved(tokenId);
+      // const owner = await token.ownerOf(tokenId);
+      assert.equal(apr, market.address, "Market contract is not approved.");
 
 
   });

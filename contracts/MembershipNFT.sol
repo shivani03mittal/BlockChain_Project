@@ -31,7 +31,7 @@ contract MembershipNFT is  ERC721Enumerable{
          uint256 newItemId = _tokenIds.current();
          _safeMint(msg.sender, newItemId);
         // _mint(msg.sender, _tokenId);
-        // setApprovalForAll(contractaddress,true);
+        // setApprovalForAll(marketplace,true);
         // _approve(maadress, _tokenId);
         approve(marketplace, newItemId);
 

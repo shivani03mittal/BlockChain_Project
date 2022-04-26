@@ -10,7 +10,7 @@ const Navigation = ({ web3Handler, account }) => {
         <Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
                 <Navbar.Brand >
-                    <img src={market} width="40" height="40" className="" alt="" />
+                    <img src={market} width="60" height="60" className="" alt="" />
                     &nbsp; DApp NFT Marketplace
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -39,7 +39,9 @@ const Navigation = ({ web3Handler, account }) => {
                         ) : (
                             <Button onClick={web3Handler} variant="outline-light">Connect Wallet</Button>
                         )}
+                        
                     </Nav>
+                   
                 </Navbar.Collapse>
             </Container>
         </Navbar>

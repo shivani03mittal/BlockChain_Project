@@ -93,7 +93,8 @@ uint public Itemscount;
 		 activeItems[tokenId] = true;
 
       assert(idtolistings[itemId].id == itemId);
-	  token.transferFrom(msg.sender,address(this),tokenId);
+	//   token.approve(address(this), tokenId);
+	//   token.transferFrom(msg.sender,address(this),tokenId);
 
 		// uint256 newItemId = listingobj.length;
 	// 	listingobj.push(Listing({

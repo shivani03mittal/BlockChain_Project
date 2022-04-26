@@ -11,9 +11,10 @@ import getWeb3 from "../Web3Client";
 
 import NFTMarketplace from '../contracts/Market.json'
 import NFTtoken from '../contracts/MembershipNFT.json'
-const Home = ({ marketplace, nft }) => {
+const Home = ({ marketplace, nft,account }) => {
   const [loading, setLoading] = useState(true)
   const [itemsList, setItems] = useState([])
+  // const account = this.props.account;
   const loadMarketplaceItems = async () => {
     // Load all unsold items
     let itemsList = [];
@@ -37,10 +38,12 @@ const Home = ({ marketplace, nft }) => {
     console.log("totalsupplyfor_sale :", totalItemsForSale);
 
     for (var tokenId = 1; tokenId <= totalSupply; tokenId++) {
+      
+      const itemfromlist = await marketplace.methods.idtolistings(tokenId);
+      if(!itemfromlist.sold){
       let item = await nft.methods.Items(tokenId).call();
       let owner = await nft.methods.ownerOf(tokenId).call();
 
-        const itemfromlist = await marketplace.methods.idtolistings(tokenId);
         console.log("check", itemfromlist);
         
         const uri = await nft.methods.tokenURI(itemfromlist.tokenId)
@@ -58,7 +61,7 @@ const Home = ({ marketplace, nft }) => {
                       isForSale: false,
                       saleId: null,
                       price: 0,
-                      isSold: null,
+                      isSold: false,
                     });
         
                   
@@ -89,37 +92,30 @@ const Home = ({ marketplace, nft }) => {
           }
         }
       }
+    }
       console.log("totalsupplyfor sale :",itemsList );
-  //   for (let i = 1; i <= itemCount; i++) {
-  //     const item = await nft.Items(i)
-  //     // if (!item.sold) 
-  //     {
-  //       // get uri url from nft contract
-  //       const uri = await nft.tokenURI(item.id)
-  //       // use uri to fetch the nft metadata stored on ipfs 
-  //       const response = await fetch(uri)
-  //       const metadata = await response.json()
-  //       // get total price of item (item price + fee)
-  //       const totalPrice = await marketplace.getTotalPrice(item.itemId)
-  //       // Add item to items array
-  //       items.push({
-        
-  //         itemId: item.itemId,
-  //         seller: item.seller,
-  //         name: metadata.name,
-  //         description: metadata.description,
-  //         image: metadata.image
-  //       })
-  //     }
-  //   }
+
     setLoading(false)
     setItems(itemsList)
   }
 
-  // const buyMarketItem = async (item) => {
-  //   await (await marketplace.purchaseItem(item.itemId, { value: item.totalPrice })).wait()
-  //   loadMarketplaceItems()
-  // }
+  const buyMarketItem = async (itemsList) => {
+    try {
+      console.log("account", account);
+      const receipt = await marketplace.methods
+        .buyToken(itemsList.tokenId)
+        .send({ gas: 210000, value: itemsList.price, from: account });
+      console.log(receipt);
+
+      const id = receipt.events.itemSold.id; ///saleId
+    } catch (error) {
+      console.error("Error, buying: ", error);
+      alert(error);
+      alert("Error while buying!");
+    }
+    
+    loadMarketplaceItems()
+  }
   console.log("Nft :", itemsList);
 
   useEffect(() => {
@@ -130,6 +126,8 @@ const Home = ({ marketplace, nft }) => {
       <h2>Loading...</h2>
     </main>
   )
+
+  
   return (
     <div className="flex justify-center">
       {itemsList.length > 0 ?
@@ -149,9 +147,11 @@ const Home = ({ marketplace, nft }) => {
                       <tr><td>{"URI: "}</td><td>{itemsList.uri}</td></tr>
                       <tr><td>{"SaleId: "}</td><td>{itemsList.saleId}</td></tr>
                       <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isForSale).toString()}</td></tr>
-                      <tr><td>{"Price: "}</td><td>{(itemsList.price).toString()}</td></tr>
+                      {/* <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isSold).toString()}</td></tr> */}
+                      <tr><td>{"Price: "}</td><td>{(itemsList.price).toString()+" WEI"}</td></tr>
                       <tr><td>{"Is Sold: "}</td><td>{(itemsList.isSold).toString()}</td></tr>
-                      <tr><td>{"Seller: "}</td><td>{(itemsList.seller).toString()}</td></tr>
+                      
+                      <tr><td>{"Seller: "}</td><td>{(itemsList.seller)}</td></tr>
 
                       </tbody>
                     </Table>
@@ -171,9 +171,9 @@ const Home = ({ marketplace, nft }) => {
                   </Card.Body>
                   <Card.Footer>
                     <div className='d-grid'>
-                      {/* <Button onClick={() => buyMarketItem(item)} variant="primary" size="lg">
-                        Buy for {ethers.utils.formatEther(item.totalPrice)} ETH
-                      </Button> */}
+                      <Button id="btn1" onClick={() => buyMarketItem(itemsList)} variant="primary" size="lg">
+                        Buy for {ethers.utils.formatEther(itemsList.price)} ETH
+                      </Button>
                     </div>
                   </Card.Footer>
                 </Card>
