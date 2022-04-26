@@ -134,7 +134,7 @@ return (
               <Home marketplace={marketplaceContract} nft={nftTokenContract}  account={account}/>
             } />
             <Route path="/create" element={
-              <Create marketplace={marketplaceContract} nft={nftTokenContract} />
+              <Create marketplace={marketplaceContract} nft={nftTokenContract} account={account} />
             } />
             <Route path="/my-listed-items" element={
               <MyListedItems marketplace={marketplaceContract} nft={nftTokenContract} account={account} />
