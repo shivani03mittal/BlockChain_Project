@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card ,Table} from 'react-bootstrap'
 import React, { Component }  from 'react';
+import image from './nftimage.png'
 
 export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
@@ -24,7 +25,8 @@ export default function MyPurchases({ marketplace, nft, account }) {
     console.log("seller",itemfromlist);
     let owner = await nft.methods.ownerOf(tokenId).call();
       if( itemfromlist.seller==account){
-          if(itemfromlist.isSold == false){
+          if(itemfromlist.isSold == false ){
+           {
 
         let item = await nft.methods.Items(tokenId).call();
          
@@ -68,10 +70,18 @@ export default function MyPurchases({ marketplace, nft, account }) {
           }
 
        }
+      }
+      else{
+        continue;
+      }
+    }
+    else{
+      continue;
     }
     }
     console.log("list:",itemsList );
    
+     
       setLoading(false)
       setPurchases(itemsList)
     }
@@ -92,7 +102,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
             {itemsList.map((itemsList, idx) => (
               <Col key={idx} className="overflow-hidden">
                 <Card>
-                <Card.Img variant="top" src={itemsList.image} />
+                <Card.Img variant="top" src={image} />
                   <Card.Body variant="Dark">
                     <Card.Title>{"MembershipNFT"}</Card.Title>
                     <Table responsive striped>

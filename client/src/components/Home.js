@@ -6,12 +6,15 @@ import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import getWeb3 from "../Web3Client";
+import image from './nftimage.png'
 // import { api } from "../../services/api";
 // import Button from '@material-ui/core/Button';
 
 import NFTMarketplace from '../contracts/Market.json'
 import NFTtoken from '../contracts/MembershipNFT.json'
 const Home = ({ marketplace, nft,account }) => {
+  var highestprice= null;
+
   const [loading, setLoading] = useState(true)
   const [itemsList, setItems] = useState([])
   // const account = this.props.account;
@@ -43,7 +46,7 @@ const Home = ({ marketplace, nft,account }) => {
       if(!itemfromlist.sold){
       let item = await nft.methods.Items(tokenId).call();
       let owner = await nft.methods.ownerOf(tokenId).call();
-
+      
         console.log("check", itemfromlist);
         
         const uri = await nft.methods.tokenURI(itemfromlist.tokenId)
@@ -89,17 +92,27 @@ const Home = ({ marketplace, nft,account }) => {
               price: item.price,
               isSold: item.isSold,
             };
+
+          //   console.log("hig ",itemsList.price );
+          // if(highestprice < itemsList.price)
+          // {
+          //   highestprice =itemsList.price;
+          // }
+
           }
         }
       }
+
     }
       console.log("totalsupplyfor sale :",itemsList );
+      
 
     setLoading(false)
     setItems(itemsList)
   }
 
   const buyMarketItem = async (itemsList) => {
+    if(nft.methods.balanceOf(account).call() >=1){
     try {
       console.log("account", account);
       const receipt = await marketplace.methods
@@ -116,6 +129,10 @@ const Home = ({ marketplace, nft,account }) => {
     
     loadMarketplaceItems()
   }
+  else{
+    alert("You don't have membership, Mint one Nft token and try again.");
+  }
+}
   console.log("Nft :", itemsList);
 
   useEffect(() => {
@@ -129,14 +146,22 @@ const Home = ({ marketplace, nft,account }) => {
 
   
   return (
+    <>
+    <div className='right'>
+    <h6 style={{marginLeft:"20px", marginRight:"50%" , marginTop:"50px" }}>Total Market Items: {itemsList.length }</h6> 
+    {/* <h6 style={{marginLeft:"20px", marginRight:"50%" , marginTop:"50px" }}>Max Price: {highestprice }</h6>  */}
+
+  </div>
     <div className="flex justify-center">
+    
+     
       {itemsList.length > 0 ?
         <div className="px-2 container">
           <Row xs={1} md={1} lg={2} className="g-4 py-5">
             {itemsList.map((itemsList, idx) => (
               <Col key={idx} className="overflow-hidden">
                 <Card>
-                  <Card.Img variant="top" src={itemsList.image} />
+                  <Card.Img variant="top" src={image} />
                   <Card.Body variant="Dark">
                     <Card.Title>{"MembershipNFT"}</Card.Title>
                     <Table responsive striped>
@@ -187,6 +212,7 @@ const Home = ({ marketplace, nft,account }) => {
           </main>
         )}
     </div>
+    </>
     // <div>YOOO</div>
   );
 }

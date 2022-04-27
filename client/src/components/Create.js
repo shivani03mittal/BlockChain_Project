@@ -20,7 +20,7 @@ const Create = ({ marketplace, nft, account }) => {
               .send({ from: account });
             console.log(receipt);
             console.log(receipt.events.Transfer.returnValues.tokenId);
-      
+            alert("Congratulations!! Minted new NFT.");
            
           } catch (error) {
             console.error("Error, minting: ", error);
@@ -31,19 +31,29 @@ const Create = ({ marketplace, nft, account }) => {
 
     // 
     const listNFT= async (event) => {
+      
         event.preventDefault()
+ 
+
     
+        if(nft.methods.balanceOf(account).call() >=1){
         try {
                   
             const receipt = await marketplace.methods
               .listToken(tokenId, price)
               .send({ gas: 210000, from: account });
             console.log(receipt);
+
+            alert("Your Nft "+tokenId+" is up for sale.")
           } catch (error) {
             console.error("Error, puting for sale: ", error);
             alert("Error while puting for sale!");
           }
     }
+    else{
+      alert("You don't have membership, Mint one Nft token and try again.");
+    }
+  }
     
     
     return (

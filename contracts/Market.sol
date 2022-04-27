@@ -52,6 +52,12 @@ uint public Itemscount;
 	  owner= payable(msg.sender);
   }
 
+ modifier checkMembership(address ad1){
+	 
+	//  require(token.name().toString() =="Membership","You don't have membership, Mint one Nft token and try again.");
+    require(token.balanceOf(ad1) >=1, "You don't have membership, Mint one Nft token and try again.");
+    _;
+  }
  modifier OnlyItemOwner(uint256 tokenId){
     require(token.ownerOf(tokenId) == msg.sender, "Sender does not own the item");
     _;
@@ -72,7 +78,10 @@ uint public Itemscount;
     _;
   }
 
-	function listToken(uint256 tokenId, uint256 price) OnlyItemOwner(tokenId) 
+	function listToken(uint256 tokenId, uint256 price) 
+	checkMembership(msg.sender)
+	OnlyItemOwner(tokenId)
+	 
     HasTransferApproval(tokenId) external  returns (uint256) {
 		// require(IERC721(token).ownerOf(tokenId) ==msg.sender, "First buy Membership");
 		// IERC721(token).transferFrom(msg.sender, address(this), tokenId);
@@ -131,6 +140,7 @@ uint public Itemscount;
 
     
 	function buyToken(uint id) ItemExists(id)
+	checkMembership(msg.sender)
     IsForSale(id)
     HasTransferApproval(idtolistings[id].tokenId) external payable {
 
