@@ -40,10 +40,15 @@ const Home = ({ marketplace, nft,account }) => {
     console.log("totalsupplyfor sale :", totalSupply);
     console.log("totalsupplyfor_sale :", totalItemsForSale);
 
-    for (var tokenId = 1; tokenId <= totalSupply; tokenId++) {
+    // for (var tokenId = 1; tokenId <= totalSupply; tokenId++) {
       
-      const itemfromlist = await marketplace.methods.idtolistings(tokenId);
-      if(!itemfromlist.sold){
+    //   const itemfromlist = await marketplace.methods.idtolistings(tokenId);
+    for (var id = 1; id <= totalItemsForSale; id++) {
+      console.log(id);
+      console.log(totalSupply);
+    const itemfromlist = await marketplace.methods.idtolistings(id).call();
+      if(!itemfromlist.isSold){
+        const tokenId= itemfromlist.tokenId;
       let item = await nft.methods.Items(tokenId).call();
       let owner = await nft.methods.ownerOf(tokenId).call();
       
@@ -112,15 +117,15 @@ const Home = ({ marketplace, nft,account }) => {
   }
 
   const buyMarketItem = async (itemsList) => {
-    if(nft.methods.balanceOf(account).call() >=1){
+    
     try {
       console.log("account", account);
       const receipt = await marketplace.methods
-        .buyToken(itemsList.tokenId)
+        .buyToken(itemsList.saleId)
         .send({ gas: 210000, value: itemsList.price, from: account });
       console.log(receipt);
 
-      const id = receipt.events.itemSold.id; ///saleId
+      // const id = receipt.events.itemSold.id; ///saleId
     } catch (error) {
       console.error("Error, buying: ", error);
       alert(error);
@@ -129,10 +134,8 @@ const Home = ({ marketplace, nft,account }) => {
     
     loadMarketplaceItems()
   }
-  else{
-    alert("You don't have membership, Mint one Nft token and try again.");
-  }
-}
+  
+
   console.log("Nft :", itemsList);
 
   useEffect(() => {

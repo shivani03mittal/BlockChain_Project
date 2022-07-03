@@ -34,9 +34,6 @@ const Create = ({ marketplace, nft, account }) => {
       
         event.preventDefault()
  
-
-    
-        if(nft.methods.balanceOf(account).call() >=1){
         try {
                   
             const receipt = await marketplace.methods
@@ -49,10 +46,7 @@ const Create = ({ marketplace, nft, account }) => {
             console.error("Error, puting for sale: ", error);
             alert("Error while puting for sale!");
           }
-    }
-    else{
-      alert("You don't have membership, Mint one Nft token and try again.");
-    }
+  
   }
     
     
@@ -141,7 +135,7 @@ const Create = ({ marketplace, nft, account }) => {
   </div>
 
                 <div class="form-group row">
-    <label for="uri" class="col-sm-5 col-form-label"><h5>Price</h5></label>
+    <label for="uri" class="col-sm-5 col-form-label"><h5>Price (in wei)</h5></label>
     <div class="col-sm-5">
     <Form.Control onChange={(e) => setPrice(e.target.value)} size="sm" required type="number" placeholder="Price in WEI" />
       

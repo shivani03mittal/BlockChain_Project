@@ -58,7 +58,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
   
               itemsList[itemListIndex] = {
                 ...itemsList[itemListIndex],
-                // isForSale: active,
+                isForSale: active,
                 seller:item.seller,
                 saleId: item.id,
                 price: item.price,
@@ -103,7 +103,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
                       <tr><td>{"URI: "}</td><td>{itemsList.uri}</td></tr>
                       <tr><td>{"SaleId: "}</td><td>{itemsList.saleId}</td></tr>
                       {/* <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isForSale).toString()}</td></tr> */}
-                      <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isSold).toString()}</td></tr>
+                      <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isForSale).toString()}</td></tr>
                       <tr><td>{"Price: "}</td><td>{(itemsList.price)+" WEI"}</td></tr>
                       <tr><td>{"Is Sold: "}</td><td>{(itemsList.isSold).toString()}</td></tr>
                       

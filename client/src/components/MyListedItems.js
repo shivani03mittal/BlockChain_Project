@@ -20,9 +20,13 @@ export default function MyPurchases({ marketplace, nft, account }) {
     .call();
     console.log("totalsupplyfor_sale :", totalItemsForSale);
 
-    for (var tokenId = 1; tokenId <= totalSupply; tokenId++) {
-    const itemfromlist = await marketplace.methods.idtolistings(tokenId).call();
+    for (var id = 1; id <= totalItemsForSale; id++) {
+      console.log(id);
+      console.log(totalSupply);
+    const itemfromlist = await marketplace.methods.idtolistings(id).call();
     console.log("seller",itemfromlist);
+    const tokenId= itemfromlist.tokenId;
+    console.log("token id", tokenId);
     let owner = await nft.methods.ownerOf(tokenId).call();
       if( itemfromlist.seller==account){
           if(itemfromlist.isSold == false ){
@@ -33,6 +37,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
         itemsList.push({
             tokenId: item.id,
                     creator: item.creator,
+
                         owner: owner,
                         uri: item.uri,
                         isForSale: false,
@@ -48,7 +53,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
                 .idtolistings(saleId)
                 .call();
   
-                console.log("totalsupplyfor sale :", item);
+                console.log("totalsupplyfor sale :", item.tokenId);
               let active = await marketplace.methods
                 .activeItems(item.tokenId)
                 .call();
@@ -60,8 +65,9 @@ export default function MyPurchases({ marketplace, nft, account }) {
   
               itemsList[itemListIndex] = {
                 ...itemsList[itemListIndex],
-                // isForSale: active,
+              
                 seller:item.seller,
+                isForSale: active,
                 saleId: item.id,
                 price: item.price,
                 isSold: item.isSold,
@@ -113,7 +119,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
                       <tr><td>{"URI: "}</td><td>{itemsList.uri}</td></tr>
                       <tr><td>{"SaleId: "}</td><td>{itemsList.saleId}</td></tr>
                       {/* <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isForSale).toString()}</td></tr> */}
-                      <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isSold).toString()}</td></tr>
+                      <tr><td>{"Active for Sale: "}</td><td>{(itemsList.isForSale).toString()}</td></tr>
                       <tr><td>{"Price: "}</td><td>{(itemsList.price)+" WEI"}</td></tr>
                       <tr><td>{"Is Sold: "}</td><td>{(itemsList.isSold).toString()}</td></tr>
                       
